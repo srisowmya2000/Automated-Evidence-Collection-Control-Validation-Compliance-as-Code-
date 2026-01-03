@@ -1,26 +1,36 @@
 import json
-from datetime import datetime, timedelta
 
 with open("evidence/raw_json/evidence.json") as f:
     evidence = json.load(f)
 
-poam = []
+html = """
+<html>
+<head>
+<title>FedRAMP Compliance Report</title>
+</head>
+<body>
+<h1>FedRAMP Compliance Status</h1>
+<table border="1" cellpadding="8">
+<tr>
+<th>Control</th>
+<th>Description</th>
+<th>Status</th>
+</tr>
+"""
 
 for item in evidence:
-    if item["status"] == "FAIL":
-        poam.append({
-            "control_id": item["control"],
-            "weakness_description": item["description"],
-            "risk_level": "High",
-            "remediation": "Review configuration and remediate per FedRAMP guidance",
-            "planned_completion_date": (
-                datetime.utcnow() + timedelta(days=30)
-            ).strftime("%Y-%m-%d"),
-            "status": "Open"
-        })
+    color = "green" if item["status"] == "PASS" else "red"
+    html += f"""
+    <tr>
+        <td>{item.get("control")}</td>
+        <td>{item.get("description")}</td>
+        <td style="color:{color}">{item.get("status")}</td>
+    </tr>
+    """
 
-with open("reports/poam.json", "w") as f:
-    json.dump(poam, f, indent=2)
+html += "</table></body></html>"
 
-print("[+] POA&M generated")
+with open("reports/fedramp_status.html", "w") as f:
+    f.write(html)
 
+print("[+] HTML compliance report generated")
