@@ -2,21 +2,22 @@ import boto3
 
 iam = boto3.client("iam")
 
-def check_mfa():
+def check_admin_users():
+    admin_users = []
     users = iam.list_users()["Users"]
-    non_compliant = []
 
     for user in users:
-        mfa_devices = iam.list_mfa_devices(
+        policies = iam.list_attached_user_policies(
             UserName=user["UserName"]
-        )["MFADevices"]
-        if not mfa_devices:
-            non_compliant.append(user["UserName"])
+        )["AttachedPolicies"]
+
+        for policy in policies:
+            if "AdministratorAccess" in policy["PolicyName"]:
+                admin_users.append(user["UserName"])
 
     return {
-        "control": "IA-2",
-        "description": "Multi-Factor Authentication enforced for IAM users",
-        "status": "FAIL" if non_compliant else "PASS",
-        "non_compliant_users": non_compliant
+        "control": "AC-6",
+        "description": "Least privilege enforced for IAM users",
+        "status": "FAIL" if admin_users else "PASS",
+        "admin_users": admin_users
     }
-
