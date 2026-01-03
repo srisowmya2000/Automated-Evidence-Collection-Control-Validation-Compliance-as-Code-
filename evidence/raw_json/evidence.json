@@ -1,0 +1,81 @@
+[
+  {
+    "control": "IA-2",
+    "description": "Multi-Factor Authentication enforced for IAM users",
+    "status": "FAIL",
+    "evaluated_at": "2026-01-02T19:10:44Z",
+    "cloud_provider": "aws",
+    "account_id": "111122223333",
+    "region": "us-east-1",
+    "non_compliant_users": [
+      {
+        "user_name": "legacy-admin",
+        "user_id": "AIDAEXAMPLE123",
+        "mfa_enabled": false,
+        "password_last_used": "2025-12-28T11:42:10Z",
+        "console_access": true
+      }
+    ],
+    "evidence_source": "iam:ListUsers, iam:ListMFADevices"
+  },
+
+  {
+    "control": "AC-6",
+    "description": "Least privilege enforced for IAM users",
+    "status": "FAIL",
+    "evaluated_at": "2026-01-02T19:10:48Z",
+    "cloud_provider": "aws",
+    "account_id": "111122223333",
+    "region": "us-east-1",
+    "admin_users": [
+      {
+        "user_name": "cloud-admin",
+        "attached_policy": "AdministratorAccess",
+        "policy_arn": "arn:aws:iam::aws:policy/AdministratorAccess"
+      }
+    ],
+    "evidence_source": "iam:ListAttachedUserPolicies"
+  },
+
+  {
+    "control": "SC-13",
+    "description": "Encryption at rest enabled for S3 buckets",
+    "status": "PASS",
+    "evaluated_at": "2026-01-02T19:10:52Z",
+    "cloud_provider": "aws",
+    "account_id": "111122223333",
+    "region": "us-east-1",
+    "encrypted_buckets": [
+      {
+        "bucket_name": "prod-app-data",
+        "encryption_algorithm": "aws:kms",
+        "kms_key_id": "arn:aws:kms:us-east-1:111122223333:key/example-key"
+      },
+      {
+        "bucket_name": "audit-log-storage",
+        "encryption_algorithm": "AES256"
+      }
+    ],
+    "unencrypted_buckets": [],
+    "evidence_source": "s3:GetBucketEncryption"
+  },
+
+  {
+    "control": "AU-12",
+    "description": "Centralized audit logging enabled",
+    "status": "PASS",
+    "evaluated_at": "2026-01-02T19:10:56Z",
+    "cloud_provider": "aws",
+    "account_id": "111122223333",
+    "region": "us-east-1",
+    "cloudtrail": {
+      "trail_name": "org-trail",
+      "is_logging": true,
+      "log_bucket": "audit-log-storage",
+      "log_file_validation_enabled": true,
+      "kms_encrypted": true
+    },
+    "evidence_source": "cloudtrail:DescribeTrails, cloudtrail:GetTrailStatus"
+  }
+]
+
