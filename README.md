@@ -4,6 +4,9 @@ This repository implements Compliance-as-Code for FedRAMP / StateRAMP, focusing 
 
 Each Python module has a single responsibility, aligned to real-world compliance workflows.
 
+<img width="1814" height="492" alt="image" src="https://github.com/user-attachments/assets/f82d83b0-6bfd-4e23-9229-f8238cada5ce" />
+
+
 Collection file 
 
 collect_evidence.py is the main entry point of the compliance automation workflow. It runs all individual FedRAMP control checks, collects machine-verifiable evidence directly from cloud service APIs, and stores the results in a structured JSON format. This ensures evidence is gathered consistently and automatically rather than manually, making it easier to validate control implementation, detect compliance drift, and provide audit-ready artifacts required for FedRAMP and StateRAMP continuous monitoring.
